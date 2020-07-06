@@ -1,5 +1,7 @@
 import React from 'react';
+import * as UiContext from './contexts/ui';
 import {View, Text, StyleSheet} from 'react-native';
+import Routes from './routes';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,9 +12,12 @@ const styles = StyleSheet.create({
 });
 
 export default function App() {
+  const [applicationState, setApplicationState] = React.useState(
+    UiContext.createApplicationInitialState(),
+  );
   return (
-    <View style={styles.container}>
-      <Text>hello</Text>
-    </View>
+    <UiContext.Context.Provider value={{applicationState, setApplicationState}}>
+      <Routes />
+    </UiContext.Context.Provider>
   );
 }
