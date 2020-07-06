@@ -2,6 +2,7 @@ import React from 'react';
 import {
   createStackNavigator,
   StackCardInterpolationProps,
+  HeaderTitle,
 } from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -28,6 +29,9 @@ import Home from './Home';
 import Statistics from './Statistics';
 import UserInfo from './UserInfo';
 import * as UiContext from '../../contexts/ui';
+import {COLOR} from '../../constants/theme';
+import {headerStyle, headerTintColor} from '../Header';
+import {DrawerActions} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 const ModalStack = createStackNavigator();
@@ -53,9 +57,25 @@ const getActiveRouteName = (state: any): string => {
   return route.name;
 };
 
+const cardStyle = {
+  backgroundColor: COLOR.MAIN,
+};
+
+const drawerStyle = {
+  backgroundColor: COLOR.MAIN,
+};
+
+const drawerContentOptions = {
+  activeTintColor: COLOR.PRIMARY,
+  inactiveTintColor: COLOR.WHITE,
+};
+
 function HomeWithDrawer() {
   return (
-    <HomeDrawer.Navigator initialRouteName={HOME}>
+    <HomeDrawer.Navigator
+      initialRouteName={HOME}
+      drawerStyle={drawerStyle}
+      drawerContentOptions={drawerContentOptions}>
       <HomeDrawer.Screen name={HOME} component={Home} />
       <HomeDrawer.Screen name={USER_INFO} component={UserInfo} />
     </HomeDrawer.Navigator>
@@ -64,7 +84,10 @@ function HomeWithDrawer() {
 
 function StatisticsWithDrawer() {
   return (
-    <StatisticsDrawer.Navigator>
+    <StatisticsDrawer.Navigator
+      initialRouteName={STATISTICS}
+      drawerStyle={drawerStyle}
+      drawerContentOptions={drawerContentOptions}>
       <StatisticsDrawer.Screen name={STATISTICS} component={Statistics} />
       <StatisticsDrawer.Screen name={USER_INFO} component={UserInfo} />
     </StatisticsDrawer.Navigator>
@@ -75,6 +98,13 @@ function TabRoutes() {
   return (
     <Tab.Navigator
       initialRouteName={HOME}
+      tabBarOptions={{
+        inactiveTintColor: COLOR.WHITE,
+        activeTintColor: COLOR.PRIMARY,
+        style: {
+          backgroundColor: COLOR.MAIN,
+        },
+      }}
       screenOptions={(props: any) => {
         const routeName = getActiveRouteName(props.route.state);
         return {
@@ -89,7 +119,10 @@ function TabRoutes() {
 
 function TabWithModalRoutes() {
   return (
-    <ModalStack.Navigator mode="modal" headerMode="none">
+    <ModalStack.Navigator
+      mode="modal"
+      headerMode="none"
+      screenOptions={{cardStyle}}>
       <Stack.Screen name={HOME} component={TabRoutes} />
       <Stack.Screen name={INPUT} component={Input} />
     </ModalStack.Navigator>
@@ -98,10 +131,24 @@ function TabWithModalRoutes() {
 
 function ChooseLoginNavigator() {
   return (
-    <ChooseLoginStack.Navigator initialRouteName={CHOOSE_LOGIN}>
-      <ChooseLoginStack.Screen name={CHOOSE_LOGIN} component={ChooseLogin} />
-      <ChooseLoginStack.Screen name={SIGN_IN} component={SignIn} />
-      <ChooseLoginStack.Screen name={SIGN_UP} component={SignUp} />
+    <ChooseLoginStack.Navigator
+      initialRouteName={CHOOSE_LOGIN}
+      screenOptions={{cardStyle, headerStyle, headerTintColor}}>
+      <ChooseLoginStack.Screen
+        name={CHOOSE_LOGIN}
+        component={ChooseLogin}
+        options={{title: 'Choose login'}}
+      />
+      <ChooseLoginStack.Screen
+        name={SIGN_IN}
+        component={SignIn}
+        options={{title: 'sign in'}}
+      />
+      <ChooseLoginStack.Screen
+        name={SIGN_UP}
+        component={SignUp}
+        options={{title: 'sign up'}}
+      />
     </ChooseLoginStack.Navigator>
   );
 }
